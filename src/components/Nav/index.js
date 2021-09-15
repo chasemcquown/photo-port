@@ -6,6 +6,8 @@ function Nav(props) {
     categories = [],
     setCurrentCategory,
     currentCategory,
+    contactSelected,
+    setContactSelected
   } = props;
 
 
@@ -24,25 +26,28 @@ function Nav(props) {
       <nav>
         <ul className="flex-row">
           <li className="mx-2">
-            <a data-testid="about" href="#about">
+            {/* NOTE: when About is selected, contactSelected is set to false, and the About component is rendered */}
+            <a data-testid="about" href="#about" onClick={() => setContactSelected(false)}>
               About me
             </a>
           </li>
-          <li className={"mx-2"}>
-            <span onClick={() => handleClick('Contact')}>
+          {/* NOTE: when the user selected Contact, we want to add the CSS class navActive, which will illuminate the background */}
+          <li className={`mx-2 ${contactSelected && 'navActive'}`}>
+            <span onClick={() => handleClick('Contact')} onClick={() => setContactSelected(true)}>
               Contact
             </span>
           </li>
           {categories.map((category) => (
             <li
-              className={`mx-1 ${
-                currentCategory.name === category.name
-                }`}
-              key={category.name}
+            className={`mx-1 ${
+              currentCategory.name === category.name && !contactSelected && `navActive`
+            }`}
+            key={category.name}
             >
               <span
                 onClick={() => {
                   setCurrentCategory(category);
+                  setContactSelected(false)
                 }}
               >
                 {capitalizeFirstLetter(category.name)}
