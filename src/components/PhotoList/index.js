@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import Modal from '../Modal';
 
 const PhotoList = ({ category }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPhoto, setCurrentPhoto] = useState();
 
   const [photos] = useState([
     {
@@ -103,19 +105,14 @@ const PhotoList = ({ category }) => {
 
   const currentPhotos = photos.filter((photo) => photo.category === category);
 
-  const [currentPhoto, setCurrentPhoto] = useState();
-
-  // in this expression, we set the initial state of isModalOpen to false, because we don't want the modal to open until a user has clicked on an image
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const toggleModal = (image, i) => {
-    setCurrentPhoto({...image, index: i})
-    setIsModalOpen(true);
-  }
+    setCurrentPhoto({ ...image, index: i });
+    setIsModalOpen(!isModalOpen);
+  };
 
   return (
     <div>
-      {isModalOpen && <Modal currentPhoto={currentPhoto}/>}
+      {isModalOpen && <Modal onClose={toggleModal} currentPhoto={currentPhoto} />}
       <div className="flex-row">
         {currentPhotos.map((image, i) => (
           <img
@@ -132,6 +129,7 @@ const PhotoList = ({ category }) => {
 };
 
 export default PhotoList;
+
 
 
 // NOTE: for photos.filter(), we're going through each photo in the photos array, trying to find every photo that matches the category that was selected by the user. If a photo matches the condition, it is returned in an array and assigned to currentPhotos. Then we can map the currentPhotos array to render each photo that matches the category selected by the user
